@@ -1,0 +1,13 @@
+{
+  "name": "your-team-plugins",
+  "owner": {
+    "name": "Your Team"
+  },
+  "plugins": [
+    {
+      "name": "write-api-docs",
+      "source": "./write-api-docs-plugin",
+      "description": "Generate Swagger/OpenAPI documentation for Laravel APIs"
+    }
+  ]
+}
