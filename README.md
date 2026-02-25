@@ -38,6 +38,30 @@ Watch and analyze video files by extracting frames with FFMPEG and using Claude'
 - Summarizing tutorial or presentation videos
 - Any task context that includes video attachments
 
+### pr-review-loop
+
+Automated PR review-fix loop that runs multi-agent code review, fixes discovered issues, and re-reviews in a cycle until the PR is clean.
+
+**Features:**
+- Delegates to `compound-engineering:workflows:review` for full multi-agent analysis (security, performance, architecture, etc.)
+- Automatically fixes P1 (critical) and P2 (important) issues
+- Suggests P3 (nice-to-have) issues without modifying code — pass `all` to fix those too
+- Re-reviews after each fix pass to catch regressions
+- Loops until clean or max 10 cycles reached
+- Only modifies files within the PR diff — never expands scope
+
+**Use when:**
+- You want to clean up a PR before merging
+- Running iterative code review and auto-fix cycles
+- You want multi-agent review feedback acted on automatically
+
+**Slash command:**
+```
+/review-fix-loop 123              # Fix P1/P2 in PR #123
+/review-fix-loop feature-branch   # Review a branch
+/review-fix-loop 123 all          # Also fix P3 issues
+```
+
 ## Installation
 
 ### 1. Add the marketplace
@@ -73,3 +97,8 @@ For the `write-api-docs` plugin:
 For the `watch-video` plugin:
 - `ffmpeg` + `ffprobe` (`brew install ffmpeg`)
 - `yt-dlp` (optional, for YouTube/Loom/Vimeo: `brew install yt-dlp`)
+
+For the `pr-review-loop` plugin:
+- GitHub CLI (`gh`) installed and authenticated
+- `compound-engineering` plugin installed (provides `workflows:review`)
+- A `compound-engineering.local.md` in the project root (for review agent configuration)
