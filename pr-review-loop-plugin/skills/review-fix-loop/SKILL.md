@@ -77,9 +77,11 @@ Run the review workflow again on the same target to verify:
 
 ### Phase 5: Loop or Complete
 
-**If new P1/P2 issues are found:** Return to Phase 3 and fix them. Increment the cycle counter.
+**CRITICAL: Do NOT present the final summary, "Next Steps", or any completion message while P1 or P2 issues remain. The loop MUST continue until all P1/P2 issues are resolved.**
 
-**If only P3 issues remain (or no issues):** The loop is complete. Present the final summary.
+**If new P1/P2 issues are found:** Return to Phase 3 and fix them immediately. Increment the cycle counter. Do not pause, summarize, or ask the user — just continue fixing.
+
+**If only P3 issues remain (or no issues):** ONLY THEN is the loop complete. Present the final summary.
 
 **If cycle limit (10) is reached:** Stop the loop. Present all remaining issues with a warning that the cycle limit was hit.
 
@@ -95,9 +97,9 @@ Cycle 3: Re-review → found 0 P1/P2 → CLEAN ✓
 
 Report cycle progress to the user between each iteration.
 
-## Final Summary
+## Final Summary & User Prompt
 
-After the loop completes, present:
+After the loop completes, present the summary **without a "Next Steps" section**. Instead, use `AskUserQuestion` to let the user decide what to do:
 
 ```markdown
 ## Review-Fix Loop Complete
@@ -115,19 +117,33 @@ After the loop completes, present:
 ### Changes Made:
 - <file1>: <summary of changes>
 - <file2>: <summary of changes>
-
-### Next Steps:
-1. Review the fixes applied
-2. Consider P3 suggestions
-3. Run tests to verify nothing broke
-4. Commit when satisfied
 ```
+
+Then ask the user with contextual options like:
+- "Review the diff of all applied fixes"
+- "Fix P3 suggestions too" (if P3 issues remain)
+- "Run tests to verify nothing broke"
+- "Commit the fixes"
+- "Discard changes"
+
+**Do NOT autonomously proceed after the summary. Wait for the user's choice.**
 
 ## Configuration
 
 This skill delegates entirely to `compound-engineering:workflows:review` for the review phase. All review agent configuration comes from the project's `compound-engineering.local.md` file.
 
 No additional configuration is needed for this skill.
+
+## Critical Loop Discipline
+
+**NEVER do any of the following while P1 or P2 issues are still unresolved:**
+- Present "Next Steps" or completion summaries
+- Ask the user to review changes or consider suggestions
+- Suggest running tests or committing
+- Pause the loop to report intermediate state as if it were final
+- Output the "Review-Fix Loop Complete" template
+
+The ONLY acceptable outputs between cycles are the cycle progress line (e.g., `Cycle 2: Re-review → found 1 P2 → fixing 1 issue`). Everything else waits until the loop terminates.
 
 ## Edge Cases
 

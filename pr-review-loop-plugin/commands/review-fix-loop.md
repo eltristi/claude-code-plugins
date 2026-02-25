@@ -1,7 +1,7 @@
 ---
 description: "Run automated PR review-fix loop: reviews PR, fixes P1/P2 issues, re-reviews until clean (max 10 cycles)"
 argument-hint: "[PR number, GitHub URL, branch name, or 'all' to include P3 fixes]"
-allowed-tools: ["Bash", "Glob", "Grep", "Read", "Edit", "Write", "Task", "Skill"]
+allowed-tools: ["Bash", "Glob", "Grep", "Read", "Edit", "Write", "Task", "Skill", "AskUserQuestion"]
 model: "opus"
 ---
 
@@ -66,10 +66,10 @@ Parse the review output and categorize:
 - **P2 Important** (🟡): Performance, architecture, significant quality issues
 - **P3 Nice-to-Have** (🔵): Minor improvements, cleanup, docs
 
-**Check completion condition:**
-- If NO P1 or P2 issues found → go to "Loop Complete"
+**Check completion condition (STRICT — do not skip this check):**
+- If ANY P1 or P2 issues exist → you MUST continue to Step 3. Do NOT present next steps or summaries.
+- If NO P1 or P2 issues found (only P3 or nothing) → go to "Loop Complete"
 - If fix scope includes P3 and NO issues at all → go to "Loop Complete"
-- Otherwise → continue to Step 3
 
 ### Step 3: Fix Issues
 
@@ -95,11 +95,13 @@ Cycle {N} fixes applied:
 
 ### Step 4: Re-Review Decision
 
+**CRITICAL: If any P1 or P2 issues were fixed in this cycle, you MUST go back to "Loop Start" to re-review. Do NOT present "Next Steps", completion summaries, or any final output. Do NOT pause or ask the user. Continue the loop immediately.**
+
 Go back to "Loop Start" to run the next review cycle.
 
 ### Loop Complete
 
-Present the final summary:
+Present the summary (without "Next Steps") and then ask the user what they'd like to do:
 
 ```markdown
 ## ✅ Review-Fix Loop Complete
@@ -117,17 +119,24 @@ Present the final summary:
 
 ### Files Modified:
 {List each file changed with a one-line summary}
-
-### Next Steps:
-1. Review the applied fixes (changes are unstaged)
-2. Consider the P3 suggestions above
-3. Run your test suite to verify nothing broke
-4. Stage and commit when satisfied
 ```
+
+**After presenting the summary, ask the user using AskUserQuestion:**
+
+Prompt: "All P1/P2 issues are resolved. What would you like to do next?"
+
+Suggestions (provide all that apply):
+- "Review the diff of all applied fixes" (always)
+- "Fix P3 suggestions too" (if there are remaining P3 issues)
+- "Run tests to verify nothing broke" (always)
+- "Commit the fixes" (always)
+- "Discard changes — I'll handle it manually" (always)
+
+Wait for the user's response and act on it before doing anything else. Do NOT proceed autonomously.
 
 ### Cycle Limit Reached
 
-If cycle counter exceeds 10:
+If cycle counter exceeds 10, present the summary and ask the user:
 
 ```markdown
 ## ⚠️ Review-Fix Loop — Cycle Limit Reached
@@ -147,13 +156,20 @@ Possible reasons:
 - Fixes are conflicting with each other
 - Underlying design issue causing recurring surface symptoms
 - Some findings may need manual intervention
-
-### Recommended Actions:
-1. Review the remaining issues manually
-2. Check if any fixes are fighting each other
-3. Consider whether remaining findings are false positives
-4. Stage and commit the fixes that were successfully applied
 ```
+
+**After presenting the summary, ask the user using AskUserQuestion:**
+
+Prompt: "Cycle limit reached with issues remaining. How would you like to proceed?"
+
+Suggestions:
+- "Review the diff of all applied fixes" (always)
+- "Show me the remaining issues in detail so I can fix manually" (always)
+- "Run tests to verify the fixes so far" (always)
+- "Commit the fixes applied so far" (always)
+- "Discard all changes" (always)
+
+Wait for the user's response and act on it before doing anything else. Do NOT proceed autonomously.
 
 ## Important Rules
 
@@ -163,3 +179,4 @@ Possible reasons:
 4. **Respect the project's patterns** — fixes should match existing code style and conventions
 5. **If a fix is uncertain, suggest instead of applying** — flag it for manual review
 6. **Consult `references/loop-patterns.md`** in the review-fix-loop skill for detailed patterns on handling specific issue types
+7. **NEVER present "Next Steps", final summaries, or completion output while P1/P2 issues remain** — the loop must continue automatically until only P3 issues (or nothing) remain. Do not pause, ask for confirmation, or suggest the user review intermediate results. The only time "Next Steps" should appear is in the final "Loop Complete" or "Cycle Limit Reached" output.
