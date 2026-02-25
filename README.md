@@ -67,7 +67,7 @@ Automated PR review-fix loop that runs multi-agent code review, fixes discovered
 ### 1. Add the marketplace
 
 ```
-/plugin marketplace add eltristi/claude-plugins
+/plugin marketplace add eltristi/claude-code-plugins
 ```
 
 ### 2. Install a plugin
