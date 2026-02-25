@@ -1,0 +1,8 @@
+{
+  "name": "watch-video",
+  "version": "1.0.0",
+  "description": "Enable Claude Code to watch and analyze video files using FFMPEG frame extraction and multimodal image analysis",
+  "author": {
+    "name": "eltristi"
+  }
+}
