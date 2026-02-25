@@ -8,6 +8,11 @@
       "name": "write-api-docs",
       "source": "./write-api-docs-plugin",
       "description": "Generate Swagger/OpenAPI documentation for Laravel APIs"
+    },
+    {
+      "name": "watch-video",
+      "source": "./watch-video-plugin",
+      "description": "Watch and analyze videos using FFMPEG frame extraction and multimodal image analysis"
     }
   ]
 }
