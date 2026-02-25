@@ -13,6 +13,11 @@
       "name": "watch-video",
       "source": "./watch-video-plugin",
       "description": "Watch and analyze videos using FFMPEG frame extraction and multimodal image analysis"
+    },
+    {
+      "name": "pr-review-loop",
+      "source": "./pr-review-loop-plugin",
+      "description": "Automated PR review-fix loop: reviews PR, fixes issues, and re-reviews until clean"
     }
   ]
 }

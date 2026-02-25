@@ -1,0 +1,8 @@
+{
+  "name": "pr-review-loop",
+  "description": "Automated PR review-fix loop: runs multi-agent review, fixes issues, and re-reviews until clean",
+  "version": "1.0.0",
+  "author": {
+    "name": "eltristi"
+  }
+}
