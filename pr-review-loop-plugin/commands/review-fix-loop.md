@@ -126,11 +126,14 @@ Present the summary (without "Next Steps") and then ask the user what they'd lik
 Prompt: "All P1/P2 issues are resolved. What would you like to do next?"
 
 Suggestions (provide all that apply):
+- "Run one more review cycle to double-check" (always)
 - "Review the diff of all applied fixes" (always)
 - "Fix P3 suggestions too" (if there are remaining P3 issues)
 - "Run tests to verify nothing broke" (always)
 - "Commit the fixes" (always)
 - "Discard changes — I'll handle it manually" (always)
+
+If the user chooses "Run one more review cycle", run a single review pass (Step 1 → Step 2). If new P1/P2 issues are found, fix them and then return to this prompt. This is NOT a full loop restart — just one additional cycle.
 
 Wait for the user's response and act on it before doing anything else. Do NOT proceed autonomously.
 
@@ -163,6 +166,7 @@ Possible reasons:
 Prompt: "Cycle limit reached with issues remaining. How would you like to proceed?"
 
 Suggestions:
+- "Run one more review cycle" (always)
 - "Review the diff of all applied fixes" (always)
 - "Show me the remaining issues in detail so I can fix manually" (always)
 - "Run tests to verify the fixes so far" (always)

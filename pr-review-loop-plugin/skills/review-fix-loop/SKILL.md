@@ -120,6 +120,7 @@ After the loop completes, present the summary **without a "Next Steps" section**
 ```
 
 Then ask the user with contextual options like:
+- "Run one more review cycle to double-check"
 - "Review the diff of all applied fixes"
 - "Fix P3 suggestions too" (if P3 issues remain)
 - "Run tests to verify nothing broke"
