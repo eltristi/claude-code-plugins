@@ -99,10 +99,10 @@ Automate PR verification by generating e2e test flows from PR changes, recording
 ### 2. Install a plugin
 
 ```
-/plugin install write-api-docs@your-team-plugins
-/plugin install watch-video@your-team-plugins
-/plugin install pr-review-loop@your-team-plugins
-/plugin install verify-pr@your-team-plugins
+/plugin install write-api-docs@obsidis
+/plugin install watch-video@obsidis
+/plugin install pr-review-loop@obsidis
+/plugin install verify-pr@obsidis
 ```
 
 ## Usage
