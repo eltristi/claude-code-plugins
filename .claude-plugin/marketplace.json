@@ -18,6 +18,11 @@
       "name": "pr-review-loop",
       "source": "./pr-review-loop-plugin",
       "description": "Automated PR review-fix loop: reviews PR, fixes issues, and re-reviews until clean"
+    },
+    {
+      "name": "verify-pr",
+      "source": "./verify-pr-plugin",
+      "description": "Automate PR verification with e2e test recording and visual proof — supports Expo (Maestro) and Laravel (Playwright)"
     }
   ]
 }

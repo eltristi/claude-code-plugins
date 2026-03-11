@@ -1,0 +1,8 @@
+{
+  "name": "verify-pr",
+  "version": "1.0.0",
+  "description": "Automate PR verification with e2e test recording and visual proof — supports Expo (Maestro) and Laravel (Playwright)",
+  "author": {
+    "name": "eltristi"
+  }
+}

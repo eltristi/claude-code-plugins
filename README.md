@@ -62,6 +62,32 @@ Automated PR review-fix loop that runs multi-agent code review, fixes discovered
 /review-fix-loop 123 all          # Also fix P3 issues
 ```
 
+### verify-pr
+
+Automate PR verification by generating e2e test flows from PR changes, recording videos, and posting visual proof as a PR comment. Supports Expo (mobile) and Laravel (Docker web) projects.
+
+**Features:**
+- Auto-detects project type (Expo or Laravel) from project files
+- Gathers full PR context (diff, changed files, reviewer comments)
+- Builds and launches the app if not running (Expo via Metro/simulators, Laravel via Docker)
+- Generates Maestro (mobile) or Playwright (web) test flows from PR changes
+- Records video of each test scenario with `maestro record` or Playwright video
+- Uploads videos to Gyazo via MCP and posts idempotent PR comments
+- Handles authentication — asks for credentials when PR touches protected routes
+- Tests iOS Simulator and Android Emulator sequentially for Expo projects
+
+**Use when:**
+- You want visual proof that PR changes work before merging
+- Reducing manual testing time on pull requests
+- You need to share test recordings with reviewers
+
+**Slash command:**
+```
+/verify-pr                        # Auto-detect PR from current branch
+/verify-pr 42                     # Verify PR #42
+/verify-pr https://github.com/org/repo/pull/42  # Verify by URL
+```
+
 ## Installation
 
 ### 1. Add the marketplace
@@ -73,19 +99,22 @@ Automated PR review-fix loop that runs multi-agent code review, fixes discovered
 ### 2. Install a plugin
 
 ```
-/plugin install write-api-docs
+/plugin install write-api-docs@your-team-plugins
+/plugin install watch-video@your-team-plugins
+/plugin install pr-review-loop@your-team-plugins
+/plugin install verify-pr@your-team-plugins
 ```
 
 ## Usage
 
-After installing a plugin, you can use its skill or slash command:
+After installing a plugin, use its slash command or let Claude detect when to use the skill automatically:
 
-**Slash command:**
 ```
 /write-api-docs
+/watch-video demo.mp4
+/review-fix-loop 123
+/verify-pr
 ```
-
-**Or let Claude detect when to use the skill automatically** - Claude will recognize when you're working on API documentation tasks and apply the skill's best practices.
 
 ## Requirements
 
@@ -102,3 +131,10 @@ For the `pr-review-loop` plugin:
 - GitHub CLI (`gh`) installed and authenticated
 - `compound-engineering` plugin installed (provides `workflows:review`)
 - A `compound-engineering.local.md` in the project root (for review agent configuration)
+
+For the `verify-pr` plugin:
+- GitHub CLI (`gh`) installed and authenticated
+- `jq` (`brew install jq`)
+- Gyazo MCP configured and available
+- **Expo projects:** Maestro CLI (`https://maestro.mobile.dev`), Xcode/iOS Simulator and/or Android SDK/Emulator
+- **Laravel projects:** Docker + Docker Compose, Playwright (`npx playwright install`)
